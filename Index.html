@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iqbal eBook Store</title>
+    <style>
+        /* Reset & Global */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://files.catbox.moe/dgptxh.jpeg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Profile Section */
+        .profile {
+            text-align: center;
+            margin-top: 30px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #28a745;
+            object-fit: cover;
+        }
+
+        .profile h2 {
+            margin: 15px 0 5px;
+            font-size: 1.8em;
+            color: #ffffff;
+        }
+
+        .profile p {
+            margin: 0 0 15px;
+            font-size: 1.1em;
+            color: #a8e6cf;
+            font-weight: 500;
+        }
+
+        .social-icons a {
+            margin: 0 15px;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.1);
+        }
+
+        /* Card Produk */
+        .card {
+            background-color: rgba(0, 0, 0, 0.75);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 30px 0;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card img:hover {
+            opacity: 0.9;
+        }
+
+        .card h3 {
+            margin: 15px 0 10px;
+            font-size: 1.4em;
+            color: #a8e6cf;
+        }
+
+        .card p {
+            font-size: 1.1em;
+            color: #ddd;
+        }
+
+        /* Tombol Beli Sekarang - Ukuran Besar */
+        .btn-large {
+            display: block;
+            width: 80%;
+            margin: 20px auto;
+            padding: 16px 0;
+            background: linear-gradient(45deg, #28a745, #3cb043);
+            color: #fff;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-large:hover {
+            background: linear-gradient(45deg, #218838, #32a038);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Halaman Detail Produk */
+        .product-detail {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.9);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            overflow-y: auto;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .product-detail-content {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: rgba(26, 26, 26, 0.95);
+            border-radius: 15px;
+            border: 1px solid #28a745;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin: 0 auto 30px;
+            display: block;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-title {
+            font-size: 2em;
+            color: #a8e6cf;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .product-price {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+        }
+
+        .product-price .old-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+
+        .product-price .new-price {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-description {
+            background-color: rgba(40, 40, 40, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .product-description h3 {
+            color: #a8e6cf;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .product-description ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .product-description li {
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        /* Quantity Selector */
+        .quantity-section {
+            background-color: rgba(40, 40, 40, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .quantity-section h3 {
+            color: #a8e6cf;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .quantity-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .quantity-option {
+            background-color: rgba(60, 60, 60, 0.8);
+            border: 2px solid #555;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .quantity-option:hover {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.2);
+        }
+
+        .quantity-option.selected {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.3);
+            color: #a8e6cf;
+        }
+
+        .total-price {
+            font-size: 1.4em;
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Tombol Beli di Detail */
+        .btn-buy {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #28a745, #3cb043);
+            color: white;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(45deg, #218838, #32a038);
+            transform: scale(1.02);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin-top: 30px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quantity-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quantity-option {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profil -->
+        <div class="profile">
+            <img src="https://files.catbox.moe/nzyf6i.png" alt="Iqbal" />
+            <h2>@iqbal</h2>
+            <p>ASET DIGITAL TERLENGKAP DISINI</p>
+            <div class="social-icons">
+                <a href="https://wa.me/6281934790802">
+                    <img src="https://img.icons8.com/fluency/48/000000/whatsapp.png" width="40" alt="WhatsApp" />
+                </a>
+            </div>
+        </div>
+
+        <!-- Produk: eBook -->
+        <div class="card">
+            <img src="https://iili.io/FPge7nf.webp" alt="1999+ E-Book" onclick="showProductDetail()" />
+            <h3>1999 e-Book untuk Promosi Produk Digital</h3>
+            <p><strike>IDR 25,000</strike> <strong>IDR 10,000</strong></p>
+            <button class="btn-large" onclick="showProductDetail()">Beli Sekarang</button>
+        </div>
+    </div>
+
+    <!-- Halaman Detail Produk -->
+    <div class="product-detail" id="productDetail">
+        <div class="product-detail-content">
+            <button class="back-btn" onclick="hideProductDetail()">← Kembali</button>
+            
+            <img src="https://iili.io/FPge7nf.webp" alt="1999+ E-Book" class="product-image" />
+            
+            <h1 class="product-title">1999+ E-Book Promosi Digital</h1>
+            
+            <div class="product-price">
+                <span class="old-price">IDR 25,000</span>
+                <span class="new-price">IDR 10,000</span>
+            </div>
+
+            <div class="product-description">
+                <h3>📚 Deskripsi Produk</h3>
+                <p>Akses selamanya! Koleksi lengkap 1999+ e-book berkualitas tinggi dalam kategori bisnis, pengembangan diri, dan promosi digital. Cocok untuk dijadikan aset konten, materi edukasi, atau jual ulang.</p>
+                
+                <p>Setiap e-book dirancang untuk membantu kamu meningkatkan pengetahuan dan strategi pemasaran digital secara efektif.</p>
+
+                <h3>✨ Yang Kamu Dapatkan:</h3>
+                <ul>
+                    <li>✅ Format PDF siap pakai dan berkualitas tinggi</li>
+                    <li>✅ Total lebih dari 1999 file e-book premium</li>
+                    <li>✅ Bisa digunakan untuk konten sosial media, webinar, atau kursus online</li>
+                    <li>✅ Kategori lengkap: Bisnis, Marketing, Self Development</li>
+                    <li>✅ Akses selamanya tanpa batas waktu</li>
+                    <li>✅ Boleh dijual ulang (reseller friendly)</li>
+                </ul>
+
+                <p><strong>🔥 Harga spesial hanya IDR 10.000!</strong> (dari harga normal IDR 25.000)</p>
+            </div>
+
+            <div class="quantity-section">
+                <h3>Pilih Jumlah Pembelian</h3>
+                <div class="quantity-options">
+                    <div class="quantity-option selected" onclick="selectQuantity(1, 10000)">
+                        <div><strong>1 Paket</strong></div>
+                        <div>IDR 10,000</div>
+                    </div>
+                    <div class="quantity-option" onclick="selectQuantity(2, 18000)">
+                        <div><strong>2 Paket</strong></div>
+                        <div>IDR 18,000</div>
+                        <div style="font-size: 0.9em; color: #a8e6cf;">Hemat IDR 2,000</div>
+                    </div>
+                </div>
+                <div class="total-price" id="totalPrice">Total: IDR 10,000</div>
+            </div>
+
+            <button class="btn-buy" id="buyButton" onclick="buyNow()">
+                💬 Beli Sekarang via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">Made with ❤️ by iqbal</div>
+
+    <script>
+        let selectedQuantity = 1;
+        let selectedPrice = 10000;
+
+        function showProductDetail() {
+            document.getElementById('productDetail').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideProductDetail() {
+            document.getElementById('productDetail').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function selectQuantity(quantity, price) {
+            selectedQuantity = quantity;
+            selectedPrice = price;
+            
+            // Remove selected class from all options
+            document.querySelectorAll('.quantity-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.target.closest('.quantity-option').classList.add('selected');
+            
+            // Update total price
+            document.getElementById('totalPrice').textContent = `Total: IDR ${price.toLocaleString('id-ID')}`;
+        }
+
+        function buyNow() {
+            const message = `Halo Iqbal, saya mau beli ${selectedQuantity} paket "1999+ E-Book Promosi Digital" dengan total harga IDR ${selectedPrice.toLocaleString('id-ID')}`;
+            const whatsappUrl = `https://wa.me/6281934790802?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Close detail when clicking outside
+        document.getElementById('productDetail').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideProductDetail();
+            }
+        });
+    </script>
+</body>
+</html>
